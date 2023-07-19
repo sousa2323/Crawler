@@ -1,4 +1,5 @@
 import requests
+from bs4 import BeautifulSoup
 
 URL_AUTOMOVEIS = "https://django-anuncios.solyd.com.br/automoveis/"
 
@@ -6,12 +7,20 @@ def buscar(url):
     try:
         resposta = requests.get(url)
         if resposta.status_code == 200:
-            print(resposta.text)
+            return resposta.text
         else:
-            print("Erro ao fazer requisição")    
+            print("Erro ao fazer requisição")
     except Exception as error:
         print("Erro ao fazer a requisição")
         print(error)
 
-buscar(URL_AUTOMOVEIS)        
-    
+def parsing(resposta_html):
+    try:
+        soup = BeautifulSoup(resposta_html, 'html.parser')
+    except Exception as error:
+        print("Erro ao fazer o parsing HTML")
+        print(error)
+
+resposta = buscar(URL_AUTOMOVEIS)
+if resposta:
+    soup = parsing(resposta)
